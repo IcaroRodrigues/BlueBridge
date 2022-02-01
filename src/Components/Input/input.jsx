@@ -1,4 +1,4 @@
-import { Container } from './style.ts'
+import { Container } from './style'
 
 export const Input = ({ placeholder, label, type, ...rest }) => {
   return (

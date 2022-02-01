@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 
 import Api, { LoginWithEmail } from '../../Api/index'
 
-import { Container, FormContainer, Button, Form } from './style.ts'
+import { Container, FormContainer, Button, Form } from './style'
 import { Input } from '../../Components/Input/input'
 
 export const Login = ({ onReceiveGoogle }) => {

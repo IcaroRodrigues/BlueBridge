@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { CreateUser } from '../../Api'
 
-import { Container, FormContainer, Button, Form } from './style.ts'
+import { Container, FormContainer, Button, Form } from './style'
 import { Input } from '../../Components/Input/input'
 
 export const Register = () => {

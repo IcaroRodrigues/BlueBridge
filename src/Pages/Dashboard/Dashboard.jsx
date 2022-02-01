@@ -1,23 +1,27 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 
-import { Form } from './Components/Form'
-import { TodoList } from './Components/TodoList'
+import { Header } from '../../Components/Header'
+import { Form } from '../../Components/Form'
+import { TodoList } from '../../Components/TodoList'
+import { onValue, ref } from 'firebase/database'
+import { db } from '../../Api'
 
-import './App.css'
-
-function App() {
+export const Dashboard = ({ user }) => {
   const [inputText, setInputText] = useState('')
   const [todos, setTodos] = useState([])
   const [status, setStatus] = useState('all')
   const [filteredTodos, setFilteredTodos] = useState([])
 
+  const user_id = localStorage.getItem('BlueBridge_user_token')
+
   useEffect(() => {
     getLocalTodos()
   }, [])
 
+
+
   useEffect(() => {
     filterHandler()
-    saveLocalTodos()
   }, [todos, status])
 
   const filterHandler = () => {
@@ -36,23 +40,23 @@ function App() {
     }
   }
 
-  const saveLocalTodos = () => {
-    localStorage.setItem('todos', JSON.stringify(todos))
-  }
-
   const getLocalTodos = () => {
-    if (localStorage.getItem('todos') === null) {
-      localStorage.setItem('todos', JSON.stringify([]))
-    } else {
-      let todoLocal = JSON.parse(
-        localStorage.getItem('todos', JSON.stringify(todos))
-      )
-      setTodos(todoLocal)
-    }
+    onValue(ref(db, `${user_id}`), snapshot => {
+      setTodos([])
+
+      const data = snapshot.val()
+
+      if( data !== null ) {
+        Object.values(data).map((todo) => {
+          setTodos((oldArray) => [...oldArray, todo])
+        })
+      }
+    })
   }
 
   return (
     <div className="App">
+      <Header user={user} />
       <header>
         <h1>Icaro's Todo List</h1>
       </header>
@@ -62,6 +66,7 @@ function App() {
         inputText={inputText}
         setInputText={setInputText}
         setStatus={setStatus}
+        user_id={user_id}
       />
       <TodoList
         filteredTodos={filteredTodos}
@@ -71,5 +76,3 @@ function App() {
     </div>
   )
 }
-
-export default App

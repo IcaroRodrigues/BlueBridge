@@ -1,22 +1,31 @@
+import { db } from "../Api"
+import { ref, set } from "firebase/database"
+import { uid } from "uid"
+
 export const Form = ({
   inputText,
   setInputText,
+  user_id,
   todos,
   setTodos,
   setStatus,
 }) => {
+
+  const uid_id = uid()
+
   const inputTextHandler = (e) => {
     setInputText(e.target.value)
   }
 
   const submitTodoHandler = (e) => {
     e.preventDefault()
-
+    
     if (inputText !== '') {
-      setTodos([
-        ...todos,
-        { text: inputText, completed: false, id: Math.random() * 1000 },
-      ])
+      set(ref(db, `/${user_id}/${uid_id}`), {
+        text: inputText,
+        completed: false,
+        uid: uid_id
+      })
     }
 
     setInputText('')

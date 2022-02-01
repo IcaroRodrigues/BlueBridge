@@ -1,21 +1,19 @@
-export const Todo = ({ text, todo, todos, setTodos }) => {
-  const completeHandler = () => {
-    setTodos(
-      todos.map((item) => {
-        if (item.id === todo.id) {
-          return {
-            ...item,
-            completed: !item.completed,
-          }
-        }
+import { ref, remove, update } from "firebase/database"
+import { db } from "../Api"
 
-        return item
-      })
-    )
+export const Todo = ({ text, todo, todos, setTodos }) => {
+
+  const user_id = localStorage.getItem('BlueBridge_user_token')
+
+  const completeHandler = (uid) => {
+    update(ref(db, `/${user_id}/${uid}`), {
+      ...todo,
+      completed: !todo.completed
+    })
   }
 
-  const deleteHandler = () => {
-    setTodos(todos.filter((el) => el.id !== todo.id))
+  const deleteHandler = (uid) => {
+    remove(ref(db, `/${user_id}/${uid}`))
   }
 
   return (
@@ -23,10 +21,10 @@ export const Todo = ({ text, todo, todos, setTodos }) => {
       <li className={`todo-item ${todo.completed ? 'completed' : ''}`}>
         {text}
       </li>
-      <button onClick={completeHandler} className="complete-btn">
+      <button onClick={() => completeHandler(todo.uid)} className="complete-btn">
         <i className="fas fa-check"></i>
       </button>
-      <button onClick={deleteHandler} className="trash-btn">
+      <button onClick={() => deleteHandler(todo.uid)} className="trash-btn">
         <i className="fas fa-trash"></i>
       </button>
     </div>

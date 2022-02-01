@@ -6,7 +6,7 @@ export const TodoList = ({ todos, setTodos, filteredTodos }) => {
       <ul className="todo-list">
         {filteredTodos.map((todo) => (
           <Todo
-            key={todo.id}
+            key={todo.uid}
             text={todo.text}
             setTodos={setTodos}
             todos={todos}
